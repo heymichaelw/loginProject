@@ -44,7 +44,8 @@ app.use(function(req, res, next){
   if (!views) {
     views = req.session.views = {};
   }
-  views = (views || 0) + 1;
+  var pathname = parseurl(req).pathname;
+  views[pathname] = (views[pathname] || 0) + 1;
   next();
 });
 
@@ -58,7 +59,7 @@ app.get('/login', function(req, res){
 app.get('/', function(req, res){
   var context = {
     'username' : req.session.user.username,
-    'views' : req.session.views
+    'views' : req.session.views['/']
   };
   res.render('index', context);
 });
@@ -81,6 +82,13 @@ app.post('/login', function(req, res){
   } else {
     res.redirect('/login');
   }
+});
+
+app.post('/number', function(req, res){
+  var context = {
+    'views' : req.session.views['/'] + 1
+  };
+  res.redirect('/');
 });
 
 app.listen(3000);
