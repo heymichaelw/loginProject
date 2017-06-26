@@ -91,4 +91,9 @@ app.post('/number', function(req, res){
   res.redirect('/');
 });
 
+app.post('/logout', function(req, res){
+  delete req.session.user;
+  res.redirect('/login');
+});
+
 app.listen(3000);
